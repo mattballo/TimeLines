@@ -101,7 +101,9 @@ struct ContentView: View {
 
   var addNewContact: some View {
     Button(action: {
-      if (!self.iapManager.hasAlreadyPurchasedUnlimitedContacts && self.contacts.count >= self.iapManager.contactsLimit) {
+      if (!self.iapManager.hasAlreadyPurchasedUnlimitedContacts && self.contacts.count >=
+          self.iapManager.contactsLimit) {
+          print("purchased: ", self.iapManager.hasAlreadyPurchasedUnlimitedContacts)
         self.showAlert(.upsell)
       } else {
         self.routeState.navigate(.editContact(contact: nil))
