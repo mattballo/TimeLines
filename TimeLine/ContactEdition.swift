@@ -51,7 +51,7 @@ struct ContactEdition: View {
   @State private var locationCompletion: MKLocalSearchCompletion?
 
   init() {
-    self.contact = RouteState.shared.editingContact
+    contact = RouteState.shared.editingContact
 
     let today = Calendar.current.startOfDay(for: Date())
 
@@ -83,18 +83,18 @@ struct ContactEdition: View {
             Spacer()
             Button(action: {
               UIApplication.shared.endEditing(true)
-              self.showModal = true
+                showModal = true
             }) {
               Text(locationText == "" ? "San Francisco" : locationText)
                 .foregroundColor(Color(locationText == "" ? UIColor.placeholderText : UIColor.label))
                 .frame(alignment: .trailing)
-            }.sheet(isPresented: self.$showModal) {
+            }.sheet(isPresented: $showModal) {
               LocationSearchController(searchBarPlaceholder: "Search for a place") { mapItem in
                 Button(action: {
-                  self.locationCompletion = mapItem
-                  self.locationText = mapItem.title
-                  self.updateLocation(mapItem)
-                  self.showModal = false
+                    locationCompletion = mapItem
+                    locationText = mapItem.title
+                    updateLocation(mapItem)
+                    showModal = false
                 }) {
                   Text(mapItem.title)
                 }
@@ -128,11 +128,11 @@ struct ContactEdition: View {
       .navigationBarItems(leading: Button(action: back) {
           Text("Cancel")
         }, trailing: Button(action: {
-          if !self.saving {
-            self.save()
+          if !saving {
+              save()
           }
         }) {
-          if self.saving {
+          if saving {
             ActivityIndicator(isAnimating: true)
           } else {
             Text("Done")
@@ -194,7 +194,7 @@ struct ContactEdition: View {
       guard let response = response, let mapItem = response.mapItems.first else {
         return
       }
-      self.location = mapItem.placemark.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        location = mapItem.placemark.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
   }
 
@@ -209,14 +209,14 @@ struct ContactEdition: View {
         guard let response = response, let mapItem = response.mapItems.first else {
           return
         }
-        self.timezone = mapItem.timeZone
-        self.location = mapItem.placemark.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        self.updateContact()
-        self.back()
+        timezone = mapItem.timeZone
+        location = mapItem.placemark.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        updateContact()
+        back()
       }
     } else if didUpdateUser() {
       saving = true
-      self.updateContact()
+      updateContact()
       back()
     }
   }

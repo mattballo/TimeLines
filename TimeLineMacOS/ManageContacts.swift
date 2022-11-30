@@ -37,11 +37,11 @@ struct ManageContacts: View {
     NavigationView {
       List(selection: $selectedContact) {
         Button(action: {
-          if (!self.iapManager.hasAlreadyPurchasedUnlimitedContacts && self.contacts.count >= self.iapManager.contactsLimit) {
-            self.showAlert(.upsell)
+          if (!iapManager.hasAlreadyPurchasedUnlimitedContacts && contacts.count >= iapManager.contactsLimit) {
+            showAlert(.upsell)
           } else {
-            self.selectedContact = nil
-            self.showingEdit = true
+            selectedContact = nil
+            showingEdit = true
           }
         }) {
           HStack {
@@ -67,22 +67,22 @@ struct ManageContacts: View {
           })
           .contextMenu(menuItems: {
             Button(action: {
-              self.selectedContact = contact
-              self.showingEdit = true
+              selectedContact = contact
+              showingEdit = true
             }) {
               Text("Edit Contact")
             }
             Button(action: {
-              self.selectedContact = nil
-              self.showingEdit = false
+              selectedContact = nil
+              showingEdit = false
               CoreDataManager.shared.deleteContact(contact)
             }) {
               Text("Delete Contact")
             }
           })
         }
-        .onDelete(perform: self.deleteContact)
-        .onMove(perform: self.moveContact)
+        .onDelete(perform: deleteContact)
+        .onMove(perform: moveContact)
       }
       .padding(.top)
       .frame(minWidth: 200)
@@ -93,7 +93,7 @@ struct ManageContacts: View {
       } else if selectedContact != nil {
         ContactDetails(contact: selectedContact!) {
           Button(action: {
-            self.showingEdit = true
+            showingEdit = true
           }) {
             Text("Edit")
           }
@@ -104,27 +104,27 @@ struct ManageContacts: View {
     .navigationViewStyle(DoubleColumnNavigationViewStyle())
     .background(Blur().edgesIgnoringSafeArea(.top))
     .alert(isPresented: $showingAlert) {
-      switch self.alertType {
+      switch alertType {
       case .noProducts:
         return Alert(
           title: Text("Error while trying to get the In App Purchases"),
-          message: Text(self.errorMessage ?? "Seems like there was an issue with the Apple's servers."),
-          primaryButton: .cancel(Text("Cancel"), action: self.dismissAlert),
-          secondaryButton: .default(Text("Try Again"), action: self.tryAgainBuyWithNoProduct)
+          message: Text(errorMessage ?? "Seems like there was an issue with the Apple's servers."),
+          primaryButton: .cancel(Text("Cancel"), action: dismissAlert),
+          secondaryButton: .default(Text("Try Again"), action: tryAgainBuyWithNoProduct)
         )
       case .cantBuy:
         return Alert(
           title: Text("Error while trying to purchase the product"),
-          message: Text(self.errorMessage ?? "Seems like there was an issue with the Apple's servers."),
-          primaryButton: .cancel(Text("Cancel"), action: self.dismissAlert),
-          secondaryButton: .default(Text("Try Again"), action: self.tryAgainBuy)
+          message: Text(errorMessage ?? "Seems like there was an issue with the Apple's servers."),
+          primaryButton: .cancel(Text("Cancel"), action: dismissAlert),
+          secondaryButton: .default(Text("Try Again"), action: tryAgainBuy)
         )
       case .upsell:
         return Alert(
           title: Text("You've reached the limit of the free Time Lines version"),
           message: Text("Unlock the full version to add an unlimited number of contacts."),
-          primaryButton: .default(Text("Unlock Full Version"), action: self.tryAgainBuy),
-          secondaryButton: .cancel(Text("Cancel"), action: self.dismissAlert)
+          primaryButton: .default(Text("Unlock Full Version"), action: tryAgainBuy),
+          secondaryButton: .cancel(Text("Cancel"), action: dismissAlert)
         )
       case nil:
         return Alert(title: Text("Unknown Error"), dismissButton: .default(Text("OK")))
@@ -145,26 +145,26 @@ struct ManageContacts: View {
   }
 
   private func showAlert(_ type: AlertType, withMessage message: String? = nil) {
-    self.alertType = type
-    self.errorMessage = message
-    self.showingAlert = true
+    alertType = type
+    errorMessage = message
+    showingAlert = true
   }
 
   private func dismissAlert() {
-    self.showingAlert = false
-    self.alertType = nil
-    self.errorMessage = nil
+    showingAlert = false
+    alertType = nil
+    errorMessage = nil
   }
 
   private func tryAgainBuyWithNoProduct() {
     dismissAlert()
-    self.iapManager.getProducts(withHandler: { result in
+    iapManager.getProducts(withHandler: { result in
       switch result {
       case .success(_):
-        self.tryAgainBuy()
+        tryAgainBuy()
         break
       case .failure(let error):
-        self.showAlert(.noProducts, withMessage: error.localizedDescription)
+        showAlert(.noProducts, withMessage: error.localizedDescription)
         break
       }
     })
@@ -173,20 +173,20 @@ struct ManageContacts: View {
   private func tryAgainBuy() {
     dismissAlert()
     DispatchQueue.main.async {
-      if let unlimitedContactsProduct = self.iapManager.unlimitedContactsProduct {
-        self.iapManager.buy(product: unlimitedContactsProduct) { result in
+      if let unlimitedContactsProduct = iapManager.unlimitedContactsProduct {
+        iapManager.buy(product: unlimitedContactsProduct) { result in
           switch result {
           case .success(_):
-            self.selectedContact = nil
-            self.showingEdit = true
+            selectedContact = nil
+            showingEdit = true
             break
           case .failure(let error):
             print(error)
-            self.showAlert(.cantBuy, withMessage: error.localizedDescription)
+            showAlert(.cantBuy, withMessage: error.localizedDescription)
           }
         }
       } else {
-        self.showAlert(.noProducts)
+        showAlert(.noProducts)
       }
     }
   }

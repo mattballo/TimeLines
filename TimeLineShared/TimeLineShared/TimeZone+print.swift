@@ -17,11 +17,11 @@ public extension TimeZone {
   }
 
   func diffInSecond() -> Int {
-    return self.secondsFromGMT() - TimeZone.autoupdatingCurrent.secondsFromGMT()
+    return secondsFromGMT() - TimeZone.autoupdatingCurrent.secondsFromGMT()
   }
 
   func prettyPrintTimeDiff() -> String {
-    let diff = self.diffInSecond()
+    let diff = diffInSecond()
     let formatter = NumberFormatter()
     formatter.usesSignificantDigits = true
     formatter.minimumSignificantDigits = 1 // default
@@ -30,6 +30,6 @@ public extension TimeZone {
   }
 
   func prettyPrintTime(_ time: Date) -> String {
-    return dateFormatter.string(from: time.addingTimeInterval(TimeInterval(self.diffInSecond())))
+    return dateFormatter.string(from: time.addingTimeInterval(TimeInterval(diffInSecond())))
   }
 }

@@ -21,7 +21,7 @@ public struct TagView: View {
 
   public var body: some View {
     Button(action: {
-      self.onSelectTag(self.tag, &self.presentationMode.wrappedValue)
+      onSelectTag(tag, &self.presentationMode.wrappedValue)
     }) {
       HStack {
         tag.swiftCircle
@@ -61,7 +61,7 @@ struct Main: View {
       ScrollView(.horizontal) {
         HStack(spacing: 10) {
           ForEach(contact.arrayTags, id: \Tag.name) { tag in
-            TagView(tag: tag, onSelectTag: self.onSelectTag)
+            TagView(tag: tag, onSelectTag: onSelectTag)
           }
         }
       }

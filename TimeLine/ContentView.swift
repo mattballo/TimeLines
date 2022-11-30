@@ -49,13 +49,13 @@ struct BindedContactRow: View {
 
   var destination: some View {
     ContactDetails(contact: contact, onSelectTag: { tag, presentationMode in
-      self.routeState.navigate(.list)
+      routeState.navigate(.list)
       presentationMode.dismiss()
-      self.searchTokens = [tag]
-      self.search = ""
+      searchTokens = [tag]
+      search = ""
     }, editView: {
       Button(action: {
-        self.routeState.navigate(.editContact(contact: self.contact))
+        routeState.navigate(.editContact(contact: contact))
       }) {
         Text("Edit")
       }
@@ -76,7 +76,7 @@ struct BindedContactRow: View {
         hideLine: editMode?.wrappedValue == .active
       )
     }.onAppear(perform: {
-      self.contact.refreshTimeZone()
+      contact.refreshTimeZone()
     })
   }
 }
@@ -101,12 +101,12 @@ struct ContentView: View {
 
   var addNewContact: some View {
     Button(action: {
-      if (!self.iapManager.hasAlreadyPurchasedUnlimitedContacts && self.contacts.count >=
-          self.iapManager.contactsLimit) {
-          print("purchased: ", self.iapManager.hasAlreadyPurchasedUnlimitedContacts)
-        self.showAlert(.upsell)
+      if (!iapManager.hasAlreadyPurchasedUnlimitedContacts && contacts.count >=
+          iapManager.contactsLimit) {
+          print("purchased: ", iapManager.hasAlreadyPurchasedUnlimitedContacts)
+        showAlert(.upsell)
       } else {
-        self.routeState.navigate(.editContact(contact: nil))
+        routeState.navigate(.editContact(contact: nil))
       }
     }) {
       HStack {
@@ -128,22 +128,22 @@ struct ContentView: View {
         MeRow(contacts: contacts)
 
         ForEach(contacts.filter { filterContact($0) }, id: \Contact.name) { (contact: Contact) in
-          BindedContactRow(contact: contact, search: self.$search, searchTokens: self.$searchTokens)
+          BindedContactRow(contact: contact, search: $search, searchTokens: $searchTokens)
         }
-        .onDelete(perform: self.deleteContact)
-        .onMove(perform: self.moveContact)
+        .onDelete(perform: deleteContact)
+        .onMove(perform: moveContact)
       }
       .resignKeyboardOnDragGesture()
       .navigationBarTitle(Text("Contacts"))
       .navigationBarItems(leading: contacts.count > 0 ? EditButton() : nil, trailing: Button(action: {
-        self.showingSheet = true
+          showingSheet = true
       }) {
         Image(systemName: "person").padding()
       }
       .actionSheet(isPresented: $showingSheet) {
         ActionSheet(title: Text("Settings"), buttons: [
           .default(Text("Manage Tags"), action: {
-            self.routeState.navigate(.tags)
+            routeState.navigate(.tags)
           }),
           .default(Text("Send Feedback"), action: {
             UIApplication.shared.open(App.feedbackPage)
@@ -153,26 +153,26 @@ struct ContentView: View {
         ])
       })
       .alert(isPresented: $showingAlert) {
-        switch self.alertType {
+        switch alertType {
         case .noProducts:
           return Alert(
             title: Text("Error while trying to get the In App Purchases"),
-            message: Text(self.errorMessage ?? "Seems like there was an issue with the Apple's servers."),
-            primaryButton: .cancel(Text("Cancel"), action: self.dismissAlert),
-            secondaryButton: .default(Text("Try Again"), action: self.tryAgainBuyWithNoProduct)
+            message: Text(errorMessage ?? "Seems like there was an issue with the Apple's servers."),
+            primaryButton: .cancel(Text("Cancel"), action: dismissAlert),
+            secondaryButton: .default(Text("Try Again"), action: tryAgainBuyWithNoProduct)
           )
         case .cantBuy:
           return Alert(
             title: Text("Error while trying to purchase the product"),
-            message: Text(self.errorMessage ?? "Seems like there was an issue with the Apple's servers."),
-            primaryButton: .cancel(Text("Cancel"), action: self.dismissAlert),
-            secondaryButton: .default(Text("Try Again"), action: self.tryAgainBuy)
+            message: Text(errorMessage ?? "Seems like there was an issue with the Apple's servers."),
+            primaryButton: .cancel(Text("Cancel"), action: dismissAlert),
+            secondaryButton: .default(Text("Try Again"), action: tryAgainBuy)
           )
         case .cantRestore:
           return Alert(
-            title: Text(self.errorMessage ?? "Error while trying to restore the purchases"),
-            primaryButton: .cancel(Text("Cancel"), action: self.dismissAlert),
-            secondaryButton: .default(Text("Try Again"), action: self.tryAgainRestore)
+            title: Text(errorMessage ?? "Error while trying to restore the purchases"),
+            primaryButton: .cancel(Text("Cancel"), action: dismissAlert),
+            secondaryButton: .default(Text("Try Again"), action: tryAgainRestore)
           )
         case .didRestore:
           return Alert(title: Text("Purchases restored successfully!"), dismissButton: .default(Text("OK")))
@@ -180,8 +180,8 @@ struct ContentView: View {
           return Alert(
             title: Text("You've reached the limit of the free Time Lines version"),
             message: Text("Unlock the full version to add an unlimited number of contacts."),
-            primaryButton: .default(Text("Unlock Full Version"), action: self.tryAgainBuy),
-            secondaryButton: .cancel(Text("Cancel"), action: self.dismissAlert)
+            primaryButton: .default(Text("Unlock Full Version"), action: tryAgainBuy),
+            secondaryButton: .cancel(Text("Cancel"), action: dismissAlert)
           )
         case nil:
           return Alert(title: Text("Unknown Error"), dismissButton: .default(Text("OK")))
@@ -192,7 +192,7 @@ struct ContentView: View {
       if contacts.count > 0 {
         ContactDetails(contact: contacts[0]) {
           Button(action: {
-            self.routeState.navigate(.editContact(contact: self.contacts[0]))
+              routeState.navigate(.editContact(contact: contacts[0]))
           }) {
             Text("Edit")
           }
@@ -206,11 +206,11 @@ struct ContentView: View {
           addNewContact.padding(.trailing, 20).foregroundColor(Color.accentColor).border(Color.accentColor)
         }
       }
-    }.sheet(isPresented: self.$routeState.isShowingSheetFromList) {
-      if self.routeState.isEditing {
-        ContactEdition().environment(\.managedObjectContext, self.context).environmentObject(self.routeState)
-      } else if self.routeState.isShowingTags {
-        Tags().environment(\.managedObjectContext, self.context).environmentObject(self.routeState)
+    }.sheet(isPresented: $routeState.isShowingSheetFromList) {
+      if routeState.isEditing {
+        ContactEdition().environment(\.managedObjectContext, context).environmentObject(routeState)
+      } else if routeState.isShowingTags {
+        Tags().environment(\.managedObjectContext, context).environmentObject(routeState)
       }
     }
 
@@ -254,26 +254,26 @@ struct ContentView: View {
   }
 
   private func showAlert(_ type: AlertType, withMessage message: String? = nil) {
-    self.alertType = type
-    self.errorMessage = message
-    self.showingAlert = true
+      alertType = type
+      errorMessage = message
+      showingAlert = true
   }
 
   private func dismissAlert() {
-    self.showingAlert = false
-    self.alertType = nil
-    self.errorMessage = nil
+      showingAlert = false
+      alertType = nil
+      errorMessage = nil
   }
 
   private func tryAgainBuyWithNoProduct() {
     dismissAlert()
-    self.iapManager.getProducts(withHandler: { result in
+      iapManager.getProducts(withHandler: { result in
       switch result {
       case .success(_):
-        self.tryAgainBuy()
+          tryAgainBuy()
         break
       case .failure(let error):
-        self.showAlert(.noProducts, withMessage: error.localizedDescription)
+          showAlert(.noProducts, withMessage: error.localizedDescription)
         break
       }
     })
@@ -282,22 +282,22 @@ struct ContentView: View {
   private func tryAgainBuy() {
     dismissAlert()
     DispatchQueue.main.async {
-      if let unlimitedContactsProduct = self.iapManager.unlimitedContactsProduct {
-        self.iapManager.buy(product: unlimitedContactsProduct) { result in
+      if let unlimitedContactsProduct = iapManager.unlimitedContactsProduct {
+          iapManager.buy(product: unlimitedContactsProduct) { result in
           switch result {
           case .success(_):
-            self.routeState.navigate(.editContact(contact: nil))
+              routeState.navigate(.editContact(contact: nil))
             break
           case .failure(let error):
             if let customError = error as? IAPManager.IAPManagerError, customError == .paymentWasCancelled {
               // don't do anything if it's cancelled
               return
             }
-            self.showAlert(.cantBuy, withMessage: error.localizedDescription)
+              showAlert(.cantBuy, withMessage: error.localizedDescription)
           }
         }
       } else {
-        self.showAlert(.noProducts)
+          showAlert(.noProducts)
       }
     }
   }
@@ -305,14 +305,14 @@ struct ContentView: View {
   private func tryAgainRestore() {
     dismissAlert()
     DispatchQueue.main.async {
-      self.iapManager.restorePurchases() { res in
+        iapManager.restorePurchases() { res in
         switch res {
         case .success(_):
-          self.showAlert(.didRestore)
+            showAlert(.didRestore)
           break
         case .failure(let error):
           print(error)
-          self.showAlert(.cantRestore, withMessage: error.localizedDescription)
+            showAlert(.cantRestore, withMessage: error.localizedDescription)
         }
       }
     }

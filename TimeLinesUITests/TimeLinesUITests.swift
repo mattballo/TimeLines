@@ -13,18 +13,18 @@ final class TimeLinesUITests: XCTestCase {
     let app = XCUIApplication()
     var contacts: [Contact?] = [Contact?]()
     
-    override func setUp() async throws {
-//        bindCacheWithContacts(2)
-        IAPManager.shared.hasAlreadyPurchasedUnlimitedContacts = true
+    override func setUp() {
+        super.setUp()
+//        bindCacheWithContacts(1)
     }
     
     override func tearDown() {
-        print("Contacts: \(contacts.count)")
         for contact in contacts {
             if let contact = contact {
                 CoreDataManager.shared.deleteContact(contact)
             }
         }
+        super.tearDown()
     }
     
     override func setUpWithError() throws {
@@ -37,8 +37,6 @@ final class TimeLinesUITests: XCTestCase {
     }
     
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        print("Contacts: \(contacts.count)")
         for contact in contacts {
             if let contact = contact {
                 CoreDataManager.shared.deleteContact(contact)
@@ -46,80 +44,68 @@ final class TimeLinesUITests: XCTestCase {
         }
     }
     
-    func oldTestAddingContact() throws {
-        let addButtonPredicate = NSPredicate(format: "label beginswith 'Add a new contact'")
-        app.buttons.element(matching: addButtonPredicate).tap()
+    func testEditOnlyMe() {
+        let lastCell = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1)
+        XCTAssert(!app.navigationBars.buttons["Edit"].exists && lastCell.staticTexts["Me"].exists)
     }
     
-    func oldTestAddingContactNonPurchasedApp() throws {
-        let addButtonPredicate = NSPredicate(format: "label beginswith 'Add a new contact'")
-        app.buttons.element(matching: addButtonPredicate).tap()
-        let unlockFullVersion = NSPredicate(format: "label beginswith 'Unlock Full Version'")
-        XCTAssert(app.alerts.buttons.element(matching: unlockFullVersion).exists)
+    func testCreateNewContact() throws {
+        let userName = "Test User"
+        let location = "San Francisco, CA"
+        
+        createNewContact(userName: userName, location: location)
+        
+        app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).tap()
+        XCTAssert(app.staticTexts[userName].exists && app.staticTexts[location].exists)
     }
     
-    func oldTestAddingContactPurchasedApp() throws {
-        let addButtonPredicate = NSPredicate(format: "label beginswith 'Add a new contact'")
-        app.buttons.element(matching: addButtonPredicate).tap()
-        let unlockFullVersion = NSPredicate(format: "label beginswith 'Unlock Full Version'")
-        XCTAssert(app.alerts.buttons.element(matching: unlockFullVersion).exists)
+    func testDeleteNewContact() throws {
+        let userName = "User To Delete"
+        createNewContact(userName: userName, location: "San Francisco, CA")
+        
+        app.navigationBars.buttons["Edit"].forceTapElement()
+        
+        let cellToDelete = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1)
+        cellToDelete.buttons.element(boundBy: 0).tap()
+        cellToDelete.buttons["Delete"].tap()
+        
+        let rowExist = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).staticTexts[userName].exists
+        XCTAssert(!rowExist)
     }
     
-    // Create contact and delete it (should tap)
-    func testCreatingNewContactAfterDeleting() throws {
-//        let addButtonPredicate = NSPredicate(format: "label beginswith 'Add a new contact'")
-        let addNewContactElement = app.buttons["Add a new contact"]
-//        app.buttons.element(matching: addButtonPredicate).tap()
-        addNewContactElement.tap()
+    func testDeleteContactAndCreateNew() throws {
+        
+    }
+    
+    func testAddingContactNonPurchasedApp() throws {
+        bindCacheWithContacts(3)
+        app.buttons["Add a new contact"].tap()
+        XCTAssert(app.alerts.buttons["Unlock Full Version"].exists)
+    }
+    
+    // TODO: MOVE TO EXTENSIONS
+    
+    func createNewContact(userName: String, location: String) {
+        app.buttons["Add a new contact"].tap()
         
         let nameInputField = app.textFields["Jane Doe"]
         nameInputField.tap()
-        nameInputField.typeText("Test User")
+        nameInputField.typeText(userName)
         
-        let locationInputField = app.buttons["San Francisco"]
-        locationInputField.tap()
+        app.buttons["San Francisco"].tap()
         let searchBar = app.searchFields["Search for a place"]
         searchBar.tap()
         searchBar.typeText("San Francisco")
-        app.cells["San Francisco, CA"].tap()
+        
+        app.cells[location].tap()
         app.navigationBars.buttons["Done"].tap()
-//        wait(for: [expectation(description: "Add a new contact")], timeout: 1)
-        sleep(3)
-//        waitForExpectations(timeout: 3) { [weak self] _ in
-//            guard let self = self else { return }
-        let unlockFullVersion = NSPredicate(format: "name LIKE 'Test User'")
-        print(app.cells.element(matching: unlockFullVersion).exists)
-        print("Number of cells: ", app.cells.count)
-        for cellRow in app.cells.allElementsBoundByAccessibilityElement {
-            print(cellRow)
-        }
-//        XCTAssert(app.cells.element(matching: unlockFullVersion).exists)
-//        }
-//        XCTAssert(app.cells["Test User"].exists)
+        
+        sleep(1)
     }
-    
-    // TEST CREATING NEW CONTACT -> DELETING AND TAPPING ON BUTTON
-    
-    //    func testExample() throws {
-    //        // UI tests must launch the application that they test.
-    //        let app = XCUIApplication()
-    //        app.launch()
-    //
-    //        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    //    }
-    
-    //    func testLaunchPerformance() throws {
-    //        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-    //            // This measures how long it takes to launch your application.
-    //            measure(metrics: [XCTApplicationLaunchMetric()]) {
-    //                XCUIApplication().launch()
-    //            }
-    //        }
-    //    }
     
     func bindCacheWithContacts(_ numberOfContacts: Int) {
         for i in 1...numberOfContacts {
-            let name = "Test Name\(i)"
+            let name = "Test Name(\(i))"
             let createdContact = CoreDataManager.shared.createContact(
                 name: name,
                 latitude: 0,
@@ -138,3 +124,15 @@ final class TimeLinesUITests: XCTestCase {
 
 // TODO: Test if non-purchased app allows you to create a new contact
 // TODO: Test if editing show list of users and without "ME"
+
+extension XCUIElement {
+    func forceTapElement() {
+        if self.isHittable {
+            self.tap()
+        }
+        else {
+            let coordinate: XCUICoordinate = self.coordinate(withNormalizedOffset: CGVectorMake(0.0, 0.0))
+            coordinate.tap()
+        }
+    }
+}
