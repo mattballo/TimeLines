@@ -70,7 +70,12 @@ struct ContactEdition: View {
   var body: some View {
     NavigationView {
       List {
-        Section(footer: MapView(coordinate: location ?? CLLocationCoordinate2D(latitude: 0, longitude: 0), span: location == nil ? 45 : 0.02).frame(height: 150).padding(.init(top: -6, leading: -16, bottom: 0, trailing: -16))) {
+        Section(footer: MapView(
+            coordinate: location ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            span: location == nil ? 45 : 0.02
+        )
+            .frame(height: 150).padding(.init(top: -6, leading: -16, bottom: 0, trailing: -16))
+        ) {
           HStack {
             Text("Name")
             TextField("Jane Doe", text: $contactName)

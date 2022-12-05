@@ -36,7 +36,7 @@ final class TimeLinesUITests: XCTestCase {
     }
     
     // 3. Test editing existing contact
-    func test03EditingContact() throws {
+    func test03EditContact() throws {
         let updatedLocation = "Košice"
         app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).tap()
         app.buttons["Edit"].tap()
@@ -52,7 +52,7 @@ final class TimeLinesUITests: XCTestCase {
     }
     
     // 4. Test deleting new contact
-    func test04DeleteNewContact() throws {
+    func test04DeleteContact() throws {
         app.navigationBars.buttons["Edit"].forceTap()
         let cellToDelete = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1)
         cellToDelete.buttons.element(boundBy: 0).tap()
@@ -85,5 +85,11 @@ final class TimeLinesUITests: XCTestCase {
         app.buttons["Add a new contact"].tap()
         XCTAssert(app.staticTexts["New Contact"].exists)
     }
+    
+//    func test07MeasureMemoryWhenOpening() {
+//        measure {
+//
+//        }
+//    }
 
 }
