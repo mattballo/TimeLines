@@ -30,7 +30,7 @@ public struct MapView {
   func makeMapView() -> MKMapView {
     let view = MKMapView(frame: .zero)
     view.delegate = delegate
-      view.pointOfInterestFilter = .excludingAll
+    view.pointOfInterestFilter = .excludingAll
     return view
   }
 

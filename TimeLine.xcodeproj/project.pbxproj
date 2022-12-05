@@ -113,13 +113,6 @@
 			remoteGlobalIDString = 03D633932436165100F8D2CE;
 			remoteInfo = TimeLineShared;
 		};
-		D2705E642933A8D200F242F2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 03D633512436149700F8D2CE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 03D633582436149700F8D2CE;
-			remoteInfo = TimeLine;
-		};
 		D2705E862933C3A800F242F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 03D633512436149700F8D2CE /* Project object */;
@@ -276,7 +269,6 @@
 		03D633BF2436343700F8D2CE /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
 		03DCC2C12451CE98000D0B94 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		03F04B34244DF32000931FB0 /* AutoFocusTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoFocusTextField.swift; sourceTree = "<group>"; };
-		D2705E602933A8D200F242F2 /* TimeLinesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeLinesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2705E802933C3A800F242F2 /* TimeLinesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeLinesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2705E822933C3A800F242F2 /* TimeLinesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLinesUITests.swift; sourceTree = "<group>"; };
 		D2D76356293DDA62000410CD /* TimeLinesUITestsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLinesUITestsExtension.swift; sourceTree = "<group>"; };
@@ -325,13 +317,6 @@
 				03D5A54724378BFB004AC5EB /* CloudKit.framework in Frameworks */,
 				03D5A53324373C84004AC5EB /* TimeLineShared.framework in Frameworks */,
 				03D6337A2436151A00F8D2CE /* NotificationCenter.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D2705E5D2933A8D200F242F2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,7 +430,7 @@
 				03D5A6442439CAD6004AC5EB /* TimeLineMacOS-launchagent */,
 				03B8BFB8244463BD0009E084 /* TimeLineWatchOS */,
 				03B8BFC7244463C00009E084 /* TimeLineWatchOS Extension */,
-				D2705E812933C3A800F242F2 /* TimeLinesUITests */,
+				D2705E812933C3A800F242F2 /* TimeLineUITests */,
 				03D633782436151A00F8D2CE /* Frameworks */,
 				03D6335A2436149700F8D2CE /* Products */,
 				03CD2B912444646B00DFCD04 /* Recovered References */,
@@ -461,7 +446,6 @@
 				03D5A6432439CAD6004AC5EB /* TimeLineMacOS-launchagent.app */,
 				03B8BFB7244463BD0009E084 /* Time Lines.app */,
 				03B8BFC3244463C00009E084 /* TimeLineWatchOS Extension.appex */,
-				D2705E602933A8D200F242F2 /* TimeLinesTests.xctest */,
 				D2705E802933C3A800F242F2 /* TimeLinesUITests.xctest */,
 			);
 			name = Products;
@@ -543,13 +527,13 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		D2705E812933C3A800F242F2 /* TimeLinesUITests */ = {
+		D2705E812933C3A800F242F2 /* TimeLineUITests */ = {
 			isa = PBXGroup;
 			children = (
 				D2705E822933C3A800F242F2 /* TimeLinesUITests.swift */,
 				D2D76356293DDA62000410CD /* TimeLinesUITestsExtension.swift */,
 			);
-			path = TimeLinesUITests;
+			path = TimeLineUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -669,24 +653,6 @@
 			productReference = 03D633772436151A00F8D2CE /* Time Lines Widget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		D2705E5F2933A8D200F242F2 /* TimeLinesTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D2705E6B2933A8D200F242F2 /* Build configuration list for PBXNativeTarget "TimeLinesTests" */;
-			buildPhases = (
-				D2705E5C2933A8D200F242F2 /* Sources */,
-				D2705E5D2933A8D200F242F2 /* Frameworks */,
-				D2705E5E2933A8D200F242F2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D2705E652933A8D200F242F2 /* PBXTargetDependency */,
-			);
-			name = TimeLinesTests;
-			productName = TimeLinesTests;
-			productReference = D2705E602933A8D200F242F2 /* TimeLinesTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		D2705E7F2933C3A800F242F2 /* TimeLinesUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2705E882933C3A800F242F2 /* Build configuration list for PBXNativeTarget "TimeLinesUITests" */;
@@ -733,10 +699,6 @@
 					03D633762436151A00F8D2CE = {
 						CreatedOnToolsVersion = 11.4;
 					};
-					D2705E5F2933A8D200F242F2 = {
-						CreatedOnToolsVersion = 14.0.1;
-						TestTargetID = 03D633582436149700F8D2CE;
-					};
 					D2705E7F2933C3A800F242F2 = {
 						CreatedOnToolsVersion = 14.0.1;
 						TestTargetID = 03D633582436149700F8D2CE;
@@ -770,7 +732,6 @@
 				03D5A6422439CAD6004AC5EB /* TimeLineMacOS-launchagent */,
 				03B8BFB6244463BD0009E084 /* TimeLineWatchOS */,
 				03B8BFC2244463C00009E084 /* TimeLineWatchOS Extension */,
-				D2705E5F2933A8D200F242F2 /* TimeLinesTests */,
 				D2705E7F2933C3A800F242F2 /* TimeLinesUITests */,
 			);
 		};

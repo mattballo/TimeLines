@@ -86,10 +86,14 @@ final class TimeLinesUITests: XCTestCase {
         XCTAssert(app.staticTexts["New Contact"].exists)
     }
     
-//    func test07MeasureMemoryWhenOpening() {
-//        measure {
-//
-//        }
-//    }
+    // Zakomentuj
+    func test07MeasureMemory() {
+        self.measure(metrics: [XCTMemoryMetric(), XCTStorageMetric()]) {
+            app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).tap()
+            sleep(4)
+            app.navigationBars.buttons["Contacts"].tap()
+        }
+    }
+    
 
 }
