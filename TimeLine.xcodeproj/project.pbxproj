@@ -66,9 +66,8 @@
 		03D633C02436343700F8D2CE /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D633BF2436343700F8D2CE /* LocationSearchController.swift */; };
 		03DCC2C22451CE98000D0B94 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DCC2C12451CE98000D0B94 /* ActivityIndicator.swift */; };
 		03F04B35244DF32000931FB0 /* AutoFocusTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F04B34244DF32000931FB0 /* AutoFocusTextField.swift */; };
-		D2705E632933A8D200F242F2 /* TimeLinesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2705E622933A8D200F242F2 /* TimeLinesTests.swift */; };
 		D2705E832933C3A800F242F2 /* TimeLinesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2705E822933C3A800F242F2 /* TimeLinesUITests.swift */; };
-		D2705E852933C3A800F242F2 /* TimeLinesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2705E842933C3A800F242F2 /* TimeLinesUITestsLaunchTests.swift */; };
+		D2D76357293DDA62000410CD /* TimeLinesUITestsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D76356293DDA62000410CD /* TimeLinesUITestsExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -278,11 +277,9 @@
 		03DCC2C12451CE98000D0B94 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		03F04B34244DF32000931FB0 /* AutoFocusTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoFocusTextField.swift; sourceTree = "<group>"; };
 		D2705E602933A8D200F242F2 /* TimeLinesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeLinesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2705E622933A8D200F242F2 /* TimeLinesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLinesTests.swift; sourceTree = "<group>"; };
-		D2705E752933B16800F242F2 /* Time_LinesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time_LinesTests.swift; sourceTree = "<group>"; };
 		D2705E802933C3A800F242F2 /* TimeLinesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeLinesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2705E822933C3A800F242F2 /* TimeLinesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLinesUITests.swift; sourceTree = "<group>"; };
-		D2705E842933C3A800F242F2 /* TimeLinesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLinesUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D2D76356293DDA62000410CD /* TimeLinesUITestsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLinesUITestsExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -448,8 +445,6 @@
 				03D5A6442439CAD6004AC5EB /* TimeLineMacOS-launchagent */,
 				03B8BFB8244463BD0009E084 /* TimeLineWatchOS */,
 				03B8BFC7244463C00009E084 /* TimeLineWatchOS Extension */,
-				D2705E612933A8D200F242F2 /* TimeLinesTests */,
-				D2705E742933B16800F242F2 /* Time LinesTests */,
 				D2705E812933C3A800F242F2 /* TimeLinesUITests */,
 				03D633782436151A00F8D2CE /* Frameworks */,
 				03D6335A2436149700F8D2CE /* Products */,
@@ -548,27 +543,11 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		D2705E612933A8D200F242F2 /* TimeLinesTests */ = {
-			isa = PBXGroup;
-			children = (
-				D2705E622933A8D200F242F2 /* TimeLinesTests.swift */,
-			);
-			path = TimeLinesTests;
-			sourceTree = "<group>";
-		};
-		D2705E742933B16800F242F2 /* Time LinesTests */ = {
-			isa = PBXGroup;
-			children = (
-				D2705E752933B16800F242F2 /* Time_LinesTests.swift */,
-			);
-			path = "Time LinesTests";
-			sourceTree = "<group>";
-		};
 		D2705E812933C3A800F242F2 /* TimeLinesUITests */ = {
 			isa = PBXGroup;
 			children = (
 				D2705E822933C3A800F242F2 /* TimeLinesUITests.swift */,
-				D2705E842933C3A800F242F2 /* TimeLinesUITestsLaunchTests.swift */,
+				D2D76356293DDA62000410CD /* TimeLinesUITestsExtension.swift */,
 			);
 			path = TimeLinesUITests;
 			sourceTree = "<group>";
@@ -962,7 +941,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2705E632933A8D200F242F2 /* TimeLinesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -970,8 +948,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2D76357293DDA62000410CD /* TimeLinesUITestsExtension.swift in Sources */,
 				D2705E832933C3A800F242F2 /* TimeLinesUITests.swift in Sources */,
-				D2705E852933C3A800F242F2 /* TimeLinesUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

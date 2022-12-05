@@ -12,59 +12,48 @@ import TimeLineShared
 final class TimeLinesUITests: XCTestCase {
     let app = XCUIApplication()
     var contacts: [Contact?] = [Contact?]()
-    
-    override func setUp() {
-        super.setUp()
-//        bindCacheWithContacts(1)
-    }
-    
-    override func tearDown() {
-        for contact in contacts {
-            if let contact = contact {
-                CoreDataManager.shared.deleteContact(contact)
-            }
-        }
-        super.tearDown()
-    }
+    private let userName = "Test User"
+    private let location = "San Francisco, CA"
     
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
         app.launch()
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
     
-    override func tearDownWithError() throws {
-        for contact in contacts {
-            if let contact = contact {
-                CoreDataManager.shared.deleteContact(contact)
-            }
-        }
-    }
+    override func tearDownWithError() throws { }
     
-    func testEditOnlyMe() {
+    // 1. Test editing myself
+    func test01EditOnlyMe() {
         let lastCell = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1)
         XCTAssert(!app.navigationBars.buttons["Edit"].exists && lastCell.staticTexts["Me"].exists)
     }
     
-    func testCreateNewContact() throws {
-        let userName = "Test User"
-        let location = "San Francisco, CA"
-        
+    // 2. Test creating new contact
+    func test02CreateNewContact() throws {
         createNewContact(userName: userName, location: location)
-        
         app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).tap()
         XCTAssert(app.staticTexts[userName].exists && app.staticTexts[location].exists)
     }
     
-    func testDeleteNewContact() throws {
-        let userName = "User To Delete"
-        createNewContact(userName: userName, location: "San Francisco, CA")
-        
-        app.navigationBars.buttons["Edit"].forceTapElement()
-        
+    // 3. Test editing existing contact
+    func test03EditingContact() throws {
+        let updatedLocation = "Košice"
+        app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).tap()
+        app.buttons["Edit"].tap()
+        app.buttons[location].tap()
+        let searchBar = app.searchFields["Search for a place"]
+        searchBar.tap()
+        searchBar.typeText(updatedLocation)
+        app.cells[updatedLocation].tap()
+        app.navigationBars.buttons["Done"].tap()
+        app.navigationBars.buttons["Contacts"].tap()
+        app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1).tap()
+        XCTAssert(app.staticTexts[userName].exists && app.staticTexts[updatedLocation].exists)
+    }
+    
+    // 4. Test deleting new contact
+    func test04DeleteNewContact() throws {
+        app.navigationBars.buttons["Edit"].forceTap()
         let cellToDelete = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1)
         cellToDelete.buttons.element(boundBy: 0).tap()
         cellToDelete.buttons["Delete"].tap()
@@ -73,66 +62,28 @@ final class TimeLinesUITests: XCTestCase {
         XCTAssert(!rowExist)
     }
     
-    func testDeleteContactAndCreateNew() throws {
-        
-    }
-    
-    func testAddingContactNonPurchasedApp() throws {
-        bindCacheWithContacts(3)
+    // 5. Test adding contact to non purchased app with measuring time of creating contact
+    func test05AddingContactNonPurchasedApp() throws {
+        let options = XCTMeasureOptions()
+        options.iterationCount = 2
+        measure(options: options) {
+            createNewContact(userName: userName, location: location)
+        }
         app.buttons["Add a new contact"].tap()
         XCTAssert(app.alerts.buttons["Unlock Full Version"].exists)
     }
-    
-    // TODO: MOVE TO EXTENSIONS
-    
-    func createNewContact(userName: String, location: String) {
+
+    // 6. Opening Add new contact dialog after deleting all contacts
+    func test06AddingContactAfterDeletingLast() {
+        app.navigationBars.buttons["Edit"].forceTap()
+        let contactsNumber = CoreDataManager.shared.fetch().count
+        for _ in 1...contactsNumber {
+            let cellToDelete = app.tables.element(boundBy: 0).cells.element(boundBy: app.cells.count-1)
+            cellToDelete.buttons.element(boundBy: 0).tap()
+            cellToDelete.buttons["Delete"].tap()
+        }
         app.buttons["Add a new contact"].tap()
-        
-        let nameInputField = app.textFields["Jane Doe"]
-        nameInputField.tap()
-        nameInputField.typeText(userName)
-        
-        app.buttons["San Francisco"].tap()
-        let searchBar = app.searchFields["Search for a place"]
-        searchBar.tap()
-        searchBar.typeText("San Francisco")
-        
-        app.cells[location].tap()
-        app.navigationBars.buttons["Done"].tap()
-        
-        sleep(1)
+        XCTAssert(app.staticTexts["New Contact"].exists)
     }
-    
-    func bindCacheWithContacts(_ numberOfContacts: Int) {
-        for i in 1...numberOfContacts {
-            let name = "Test Name(\(i))"
-            let createdContact = CoreDataManager.shared.createContact(
-                name: name,
-                latitude: 0,
-                longitude: 0,
-                locationName: "",
-                timezone: 0,
-                startTime: nil,
-                endTime: nil,
-                tags: nil,
-                favorite: false
-            )
-            contacts.append(createdContact)
-        }
-    }
-}
 
-// TODO: Test if non-purchased app allows you to create a new contact
-// TODO: Test if editing show list of users and without "ME"
-
-extension XCUIElement {
-    func forceTapElement() {
-        if self.isHittable {
-            self.tap()
-        }
-        else {
-            let coordinate: XCUICoordinate = self.coordinate(withNormalizedOffset: CGVectorMake(0.0, 0.0))
-            coordinate.tap()
-        }
-    }
 }

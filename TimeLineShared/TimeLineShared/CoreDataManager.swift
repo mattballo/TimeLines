@@ -195,6 +195,13 @@ public class CoreDataManager {
       print("❌ Failed to delete Contact: \(error.localizedDescription)")
     }
   }
+    
+    public func deleteAll() {
+        let contacts = fetch()
+        for contact in contacts {
+            deleteContact(contact)
+        }
+    }
 
   public func deleteTag(_ tag: Tag) {
     let context = persistentContainer.viewContext
